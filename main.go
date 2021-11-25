@@ -69,6 +69,7 @@ func main() {
 					PrintErr(err)
 					break
 				}
+				entity10.Code = args
 				SendResult10(update, entity10, bot)
 				break
 
@@ -152,6 +153,7 @@ func TextParentChildFromEntity(ChildorParent []Entity) string {
 	return textResult
 }
 func SendResult10(update tgbotapi.Update, entity10 Entity10, bot *tgbotapi.BotAPI) {
-	result := "<b> \nTitle: </b>" + entity10.Name + "<b>\n\nDescription: </b>	" + entity10.Description
+
+	result := "<b> \nCode: </b><a href='https://icd.who.int/browse10/2019/en#/" + entity10.Code + "'>" + entity10.Code + "</a><b> \nTitle: </b>" + entity10.Name + "<b>\n\nDescription: </b>	" + entity10.Description
 	SendMessage(update, bot, result)
 }
