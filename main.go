@@ -3,17 +3,25 @@ package main
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
+	"os"
 	"strings"
 )
 
-
-
 func main() {
-	bot, err := tgbotapi.NewBotAPI("")
+	token := ""
+	if token == "" {
+		if len(os.Args) > 1 {
+			token = os.Args[1]
+		} else {
+			println("No Token Provided!")
+			os.Exit(0)
+		}
+	}
+
+	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		log.Panic(err)
 	}
-
 	bot.Debug = true
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
@@ -25,34 +33,34 @@ func main() {
 	for update := range updates {
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
-		if update.Message != nil && update.Message.IsCommand(){ // ignore any non-Message Commands Updates
+		if update.Message != nil && update.Message.IsCommand() { // ignore any non-Message Commands Updates
 
 			args := strings.Trim(update.Message.CommandArguments(), " ")
 			command := update.Message.Command()
 
 			switch command {
-				case "code":
-					if update.Message.CommandArguments() == ""{
-						SendMessage(update, bot, "No Args!")
-						continue
-					}
-					lineEntity, err := GetICDLinEntityByCode(args)
-					entity, err2 := GetICDFoundationByID(lineEntity.ID())
-					lineEntity, err = GetICDLinEntityByID(entity.ID())
+			case "code":
+				if update.Message.CommandArguments() == "" {
+					SendMessage(update, bot, "No Args!")
+					continue
+				}
+				lineEntity, err := GetICDLinEntityByCode(args)
+				entity, err2 := GetICDFoundationByID(lineEntity.ID())
+				lineEntity, err = GetICDLinEntityByID(entity.ID())
 
-					if err2 != nil {
-						PrintErr(err)
-						break
-					}
-					if err != nil {
-						PrintErr(err)
-						break
-					}
-					SendResult(update, entity, lineEntity, bot)
+				if err2 != nil {
+					PrintErr(err)
 					break
+				}
+				if err != nil {
+					PrintErr(err)
+					break
+				}
+				SendResult(update, entity, lineEntity, bot)
+				break
 
 			case "code10":
-				if update.Message.CommandArguments() == ""{
+				if update.Message.CommandArguments() == "" {
 					SendMessage(update, bot, "No Args!")
 					continue
 				}
@@ -64,37 +72,36 @@ func main() {
 				SendResult10(update, entity10, bot)
 				break
 
-
 			case "search":
-					if update.Message.CommandArguments() == ""{
-						SendMessage(update, bot, "No Args!")
-						continue
-					}
-					lineEntityList, err := SearchICDLinEntity(args)
-					if err != nil {
+				if update.Message.CommandArguments() == "" {
+					SendMessage(update, bot, "No Args!")
+					continue
+				}
+				lineEntityList, err := SearchICDLinEntity(args)
+				if err != nil {
+					PrintErr(err)
+					break
+				}
+				if len(lineEntityList) == 0 {
+					SendMessage(update, bot, "Nothing Found!")
+				} else {
+					lineEntity := lineEntityList[0]
+					entity, err2 := GetICDFoundationByID(lineEntity.ID())
+					lineEntity, err = GetICDLinEntityByID(entity.ID())
+					if err2 != nil {
 						PrintErr(err)
 						break
 					}
-					if len(lineEntityList) == 0 {
-						SendMessage(update, bot, "Nothing Found!")
-					} else {
-						lineEntity := lineEntityList[0]
-						entity, err2 := GetICDFoundationByID(lineEntity.ID())
-						lineEntity, err = GetICDLinEntityByID(entity.ID())
-						if err2 != nil {
-							PrintErr(err)
-							break
-						}
-						SendResult(update, entity, lineEntity, bot)
-					}
-					break
-				case "help":
-					text := "Commands:\n " +
-						"/search {term}\n " +
-						"/code {ICD-11 code}\n " +
-						"/code10 {ICD-10 code}\n " +
-						"/help"
-					SendMessage(update, bot, text)
+					SendResult(update, entity, lineEntity, bot)
+				}
+				break
+			case "help":
+				text := "Commands:\n " +
+					"/search {term}\n " +
+					"/code {ICD-11 code}\n " +
+					"/code10 {ICD-10 code}\n " +
+					"/help"
+				SendMessage(update, bot, text)
 			}
 		}
 	}
@@ -113,10 +120,10 @@ func SendResult(update tgbotapi.Update, entity Entity, lineEntity LineEntity, bo
 	result := "<b>Title: </b>" + entity.Title.Value
 	if lineEntity.BrowserUrl == "" {
 		result += "<b> \nCode: </b>" + lineEntity.GetCode()
-	}else {
-		result += "<b> \nCode: </b><a href='"+lineEntity.BrowserUrl+"'>" + lineEntity.GetCode() + "</a>"
+	} else {
+		result += "<b> \nCode: </b><a href='" + lineEntity.BrowserUrl + "'>" + lineEntity.GetCode() + "</a>"
 	}
-	if entity.Definition.Value != ""{
+	if entity.Definition.Value != "" {
 		result += "<b>\n\nDescription: </b>	" + entity.Definition.Value
 	}
 	children := entity.GetChildren()
@@ -124,10 +131,10 @@ func SendResult(update tgbotapi.Update, entity Entity, lineEntity LineEntity, bo
 	TextChildren := TextParentChildFromEntity(children)
 	TextParent := TextParentChildFromEntity(parents)
 	if TextChildren != "" {
-		result += "\n\n<b>children:</b>\n"+TextChildren
+		result += "\n\n<b>children:</b>\n" + TextChildren
 	}
 	if TextParent != "" {
-		result += "\n\n<b>Parents:</b>\n"+TextParent
+		result += "\n\n<b>Parents:</b>\n" + TextParent
 	}
 	SendMessage(update, bot, result)
 }
