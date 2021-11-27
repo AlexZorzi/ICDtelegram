@@ -103,6 +103,13 @@ func main() {
 					"/code10 {ICD-10 code}\n " +
 					"/help"
 				SendMessage(update, bot, text)
+			case "start":
+				text := "Hey there! - " +
+					"This bot allows you to search the ICD10 and ICD11 diagnostic tools through Telegram.\n\n" +
+					"Hit /help to find out about my commands.\n\n" +
+					"The source code can be found <a href=\"https://w3y.cc/icdbottgrefer\">here</a>."
+				SendMessage(update, bot, text)
+
 			}
 		}
 	}
