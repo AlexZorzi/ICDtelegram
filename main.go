@@ -14,7 +14,7 @@ func main() {
 		if len(os.Args) > 1 {
 			token = os.Args[1]
 		} else {
-			filename:=filepath.Base(os.Args[0])
+			filename := filepath.Base(os.Args[0])
 			println("No Token Provided!")
 			println("Usage: " + filename + " <API token>")
 			os.Exit(1)
@@ -125,7 +125,6 @@ func SendMessage(update tgbotapi.Update, bot *tgbotapi.BotAPI, text string) {
 	if err != nil {
 		PrintErr(err)
 	}
-}
 }
 
 func SendResult(update tgbotapi.Update, entity Entity, lineEntity LineEntity, bot *tgbotapi.BotAPI) {

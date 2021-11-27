@@ -12,7 +12,7 @@ func SearchICDLinEntity(query string) ([]LineEntity, error) {
 	lineentityList := struct {
 		DestinationEntities []LineEntity
 	}{}
-	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/release/11/"+latestRelease+"/mms/search?q="+query)
+	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/release/11/" + latestRelease + "/mms/search?q=" + query)
 	if err := json.Unmarshal(bodyBytes, &lineentityList); err != nil {
 		PrintErr(err)
 	}
@@ -21,18 +21,17 @@ func SearchICDLinEntity(query string) ([]LineEntity, error) {
 
 func GetICDLinEntityByID(ID string) (LineEntity, error) {
 	lineEntity := LineEntity{}
-	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/release/11/2021-05/mms/"+ID)
+	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/release/11/2021-05/mms/" + ID)
 	if err := json.Unmarshal(bodyBytes, &lineEntity); err != nil {
 		PrintErr(err)
 	}
 	return lineEntity, err
 }
 
-
 func GetICDLinEntityByCode(code string) (LineEntity, error) {
 	latestRelease := "2021-05"
 	lineEntity := LineEntity{}
-	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/release/11/"+latestRelease+"/mms/codeinfo/"+code)
+	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/release/11/" + latestRelease + "/mms/codeinfo/" + code)
 	if err := json.Unmarshal(bodyBytes, &lineEntity); err != nil {
 		PrintErr(err)
 	}
@@ -41,7 +40,7 @@ func GetICDLinEntityByCode(code string) (LineEntity, error) {
 
 func GetICDFoundationByID(ID string) (Entity, error) {
 	entity := Entity{}
-	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/entity/"+ID)
+	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/entity/" + ID)
 	if err := json.Unmarshal(bodyBytes, &entity); err != nil {
 		PrintErr(err)
 	}
@@ -50,7 +49,7 @@ func GetICDFoundationByID(ID string) (Entity, error) {
 
 func GetICD10ByCode(code string) (Entity10, error) {
 	entity10 := Entity10{}
-	bodyBytes, err := ApiRequest("http://icd10api.com/?code="+code+"&desc=long&r=json")
+	bodyBytes, err := ApiRequest("http://icd10api.com/?code=" + code + "&desc=long&r=json")
 	if err := json.Unmarshal(bodyBytes, &entity10); err != nil {
 		PrintErr(err)
 	}
@@ -67,7 +66,7 @@ func ApiRequest(apiUrl string) ([]byte, error) {
 	///////////////////////////////////
 	req.Header.Set("Accept-Language", "en")
 	req.Header.Set("API-Version", "v2")
-	req.Header.Set("accept","application/json")
+	req.Header.Set("accept", "application/json")
 	// Headers not needed for ICD-10 Api but whatever
 	///////////////////////////////////
 	resp, err := client.Do(req)
@@ -77,5 +76,3 @@ func ApiRequest(apiUrl string) ([]byte, error) {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	return bodyBytes, err
 }
-
-

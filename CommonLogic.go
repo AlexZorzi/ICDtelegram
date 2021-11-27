@@ -5,16 +5,16 @@ import (
 	"strings"
 )
 
-func GetIDfromUrl(urlID string)  string{
+func GetIDfromUrl(urlID string) string {
 	splits := strings.Split(urlID, "/")
 	if splits[len(splits)-1] == "other" || splits[len(splits)-1] == "unspecified" {
 		return splits[len(splits)-2]
-	}else {
+	} else {
 		return splits[len(splits)-1]
 	}
 }
 
-func PrintErr(err error)  {
+func PrintErr(err error) {
 	fmt.Println("################################")
 	fmt.Println(err)
 	fmt.Println("################################")
