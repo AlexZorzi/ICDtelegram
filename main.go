@@ -4,6 +4,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -13,8 +14,10 @@ func main() {
 		if len(os.Args) > 1 {
 			token = os.Args[1]
 		} else {
+			filename := filepath.Base(os.Args[0])
 			println("No Token Provided!")
-			os.Exit(0)
+			println("Usage: " + filename + " <API token>")
+			os.Exit(1)
 		}
 	}
 
@@ -97,12 +100,18 @@ func main() {
 				}
 				break
 			case "help":
-				text := "Commands:\n " +
+				text := "Commands:\n\n " +
 					"/search {term}\n " +
 					"/code {ICD-11 code}\n " +
-					"/code10 {ICD-10 code}\n " +
-					"/help"
+					"/code10 {ICD-10 code}\n "
 				SendMessage(update, bot, text)
+			case "start":
+				text := "Hey there! - " +
+					"This bot allows you to search the ICD10 and ICD11 diagnostic tools through Telegram.\n\n" +
+					"Hit /help to find out about my commands.\n\n" +
+					"The source code can be found <a href=\"https://w3y.cc/icdbottgrefer\">here</a>."
+				SendMessage(update, bot, text)
+
 			}
 		}
 	}
@@ -111,6 +120,7 @@ func main() {
 func SendMessage(update tgbotapi.Update, bot *tgbotapi.BotAPI, text string) {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
 	msg.ParseMode = "html"
+	msg.DisableWebPagePreview = true
 	_, err := bot.Send(msg)
 	if err != nil {
 		PrintErr(err)
