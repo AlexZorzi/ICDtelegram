@@ -4,6 +4,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -13,8 +14,10 @@ func main() {
 		if len(os.Args) > 1 {
 			token = os.Args[1]
 		} else {
+			filename:=filepath.Base(os.Args[0])
 			println("No Token Provided!")
-			os.Exit(0)
+			println("Usage: " + filename + " <API token>")
+			os.Exit(1)
 		}
 	}
 
