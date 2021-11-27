@@ -117,10 +117,12 @@ func main() {
 func SendMessage(update tgbotapi.Update, bot *tgbotapi.BotAPI, text string) {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
 	msg.ParseMode = "html"
+	msg.DisableWebPagePreview = true
 	_, err := bot.Send(msg)
 	if err != nil {
 		PrintErr(err)
 	}
+}
 }
 
 func SendResult(update tgbotapi.Update, entity Entity, lineEntity LineEntity, bot *tgbotapi.BotAPI) {
