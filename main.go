@@ -97,11 +97,10 @@ func main() {
 				}
 				break
 			case "help":
-				text := "Commands:\n " +
+				text := "Commands:\n\n " +
 					"/search {term}\n " +
 					"/code {ICD-11 code}\n " +
-					"/code10 {ICD-10 code}\n " +
-					"/help"
+					"/code10 {ICD-10 code}\n "
 				SendMessage(update, bot, text)
 			case "start":
 				text := "Hey there! - " +
