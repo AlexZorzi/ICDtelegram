@@ -12,7 +12,7 @@ func SearchICDLinEntity(query string) ([]LineEntity, error) {
 	lineentityList := struct {
 		DestinationEntities []LineEntity
 	}{}
-	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/release/11/" + latestRelease + "/mms/search?q=" + query)
+	bodyBytes, err := ApiRequest("https://icd.api.watn3y.de/icd/release/11/" + latestRelease + "/mms/search?q=" + query)
 	if err := json.Unmarshal(bodyBytes, &lineentityList); err != nil {
 		PrintErr(err)
 	}
@@ -21,7 +21,7 @@ func SearchICDLinEntity(query string) ([]LineEntity, error) {
 
 func GetICDLinEntityByID(ID string) (LineEntity, error) {
 	lineEntity := LineEntity{}
-	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/release/11/2021-05/mms/" + ID)
+	bodyBytes, err := ApiRequest("https://icd.api.watn3y.de/icd/release/11/2021-05/mms/" + ID)
 	if err := json.Unmarshal(bodyBytes, &lineEntity); err != nil {
 		PrintErr(err)
 	}
@@ -31,7 +31,7 @@ func GetICDLinEntityByID(ID string) (LineEntity, error) {
 func GetICDLinEntityByCode(code string) (LineEntity, error) {
 	latestRelease := "2021-05"
 	lineEntity := LineEntity{}
-	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/release/11/" + latestRelease + "/mms/codeinfo/" + code)
+	bodyBytes, err := ApiRequest("https://icd.api.watn3y.de/icd/release/11/" + latestRelease + "/mms/codeinfo/" + code)
 	if err := json.Unmarshal(bodyBytes, &lineEntity); err != nil {
 		PrintErr(err)
 	}
@@ -40,7 +40,7 @@ func GetICDLinEntityByCode(code string) (LineEntity, error) {
 
 func GetICDFoundationByID(ID string) (Entity, error) {
 	entity := Entity{}
-	bodyBytes, err := ApiRequest("https://icd.api.watn3y.net/icd/entity/" + ID)
+	bodyBytes, err := ApiRequest("https://icd.api.watn3y.de/icd/entity/" + ID)
 	if err := json.Unmarshal(bodyBytes, &entity); err != nil {
 		PrintErr(err)
 	}
